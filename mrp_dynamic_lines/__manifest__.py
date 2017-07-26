@@ -15,6 +15,8 @@
     'data': [
         'views/mrp_bom.xml',
     ],
+    'post_init_hook': 'post_init_hook',
+    'uninstall_hook': 'uninstall_hook',
     # 'demo': [
     #     'demo/mrp_bom_line.xml',
     # ],

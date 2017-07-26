@@ -24,11 +24,12 @@ class MrpBomLine(models.Model):
         comodel_name='product.product',
         string='Default Variant',
         help='Default variant to use if a match cannot be found',
+        required=True,
     )
     required_value_ids = fields.Many2many(
         comodel_name='product.attribute.value',
         string='Required Values',
-        help='Require the raw material to have these attribute values'
+        help='Require the raw material to have these attribute values',
     )
     match_attributes = fields.Boolean(
         string='Match Attributes',
@@ -64,9 +65,14 @@ class MrpBomLine(models.Model):
                 # and share values with the parent product
                 common_attrs = False
                 if bom_line.match_attributes:
-                    parent_attrs = parent_product.attribute_value_ids.mapped('attribute_id')
-                    bom_attrs = bom_tmpl.attribute_line_ids.mapped('attribute_id')
+                    parent_attrs = parent_product.attribute_value_ids.mapped(
+                        'attribute_id')
+                    bom_attrs = bom_tmpl.attribute_line_ids.mapped(
+                        'attribute_id')
                     common_attrs = parent_attrs & bom_attrs
+                    return_default = False
+                else:
+                    return_default = True
                 if common_attrs:
                     value_ids = [v.id for v in
                                  parent_product.attribute_value_ids if
@@ -76,13 +82,18 @@ class MrpBomLine(models.Model):
                             ('attribute_value_ids', 'in', [value_id])
                         )
                 # and there can be only one result
-                candidates = Product.search(search_domain)
-                if not candidates:
+                products = Product.search(search_domain)
+                if len(products) == 1:
+                    bom_line.product_id = products[0]
+                elif return_default or not products:
                     bom_line.product_id = bom_line.variant_id
-                elif len(candidates) == 1:
-                    bom_line.product_id = candidates[0]
                 else:
-                    raise ValidationError(_('More than one matching product'))
+                    names = ['  - %s' % p['name'] for p in products.name_get()]
+                    raise ValidationError(
+                        _('The BoM Line %s in BoM %s is matching too many '
+                          'products.  Expected < 1 and received:\n%s') %
+                        (self.product_tmpl_id.name,
+                         self.bom_id.name, '\n'.join(names)))
             else:
                 bom_line.product_id = bom_line.variant_id
 
