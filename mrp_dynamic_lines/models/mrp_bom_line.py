@@ -36,10 +36,6 @@ class MrpBomLine(models.Model):
         help='Automatically select the raw material based on common'
              'shared attributes',
     )
-    scale_weight = fields.Boolean(
-        string='Scale Weight',
-        help='Scale the line quantity by weight of variant',
-    )
     attribute_value_ids = fields.Many2many(
         help='Only apply this line if the manufactured product contains'
              'these attribute values.',

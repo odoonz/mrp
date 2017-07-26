@@ -16,7 +16,6 @@
                        context="{'default_type': 'product'}" />
             </xpath>
             <xpath expr="//field[@name='bom_line_ids']//tree/field[@name='attribute_value_ids']" position="before">
-                <field name="scale_weight" />
                 <field name="match_attributes" />
                 <field name="required_value_ids" widget="many2many_tags"
                        domain="[('product_ids.product_tmpl_id', '=', product_tmpl_id)]" />
