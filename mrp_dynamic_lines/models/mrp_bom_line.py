@@ -36,6 +36,7 @@ class MrpBomLine(models.Model):
         help='Automatically select the raw material based on common'
              'shared attributes',
     )
+    # Note: Just changing a useless help message here
     attribute_value_ids = fields.Many2many(
         help='Only apply this line if the manufactured product contains'
              'these attribute values.',

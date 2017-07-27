@@ -14,6 +14,7 @@ class MrpBom(models.Model):
             product, quantity, picking_type=picking_type)
         lines_done = []
         for bom_line, orig_line in orig_lines_done:
-            bom_line = bom_line.with_context(product_id=orig_line['product'].id)
+            bom_line = bom_line.with_context(
+                product_id=orig_line['product'].id)
             lines_done.append((bom_line, orig_line))
         return boms_done, lines_done
