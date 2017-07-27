@@ -16,8 +16,12 @@ class MrpBom(models.Model):
         lines_done = []
         for bom_line, orig_line in orig_lines_done:
             if bom_line.scale_weight:
-                qty = (orig_line['product'].weight /
-                       bom_line.product_id.weight) * bom_line.product_qty
+                bom = bom_line.bom_id
+                parent_weight = (bom.product_uom_id._compute_quantity(
+                    bom.product_qty, orig_line['product'].uom_id) *
+                                 orig_line['product'].weight or 1.0)
+                qty = (parent_weight * orig_line['original_qty'] *
+                       bom_line.product_qty)
                 rounding = bom_line.product_uom_id.rounding
                 orig_line.update(qty=float_round(
                     qty, precision_rounding=rounding, rounding_method='UP'))

@@ -10,7 +10,8 @@
         <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='bom_line_ids']//tree/field[@name='attribute_value_ids']" position="before">
-                <field name="scale_weight" />
+                <field name="scale_weight"
+                       attrs="{'readonly': [('product_uom_id', '!=', %(product.product_uom_kgm)d)]}"/>
             </xpath>
         </field>
     </record>
