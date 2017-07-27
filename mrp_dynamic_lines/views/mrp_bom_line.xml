@@ -28,7 +28,7 @@
             <xpath expr="//field[@name='product_id']" position="replace">
                 <field name="product_tmpl_id"/>
             </xpath>
-            <xpath expr="//filter[@contains(context, 'product_id')]" position="attributes">
+            <xpath expr="(//filter)[2]" position="attributes">
                 <attribute name="context">{'group_by': 'product_tmpl_id'}</attribute>
             </xpath>
         </field>
