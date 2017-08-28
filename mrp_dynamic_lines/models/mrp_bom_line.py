@@ -60,7 +60,7 @@ class MrpBomLine(models.Model):
                             ('attribute_value_ids', 'in', [value.id])
                         )
                 # and share values with the parent product
-                common_attrs = False
+                common_attrs = self.env['product.attribute']
                 if bom_line.match_attributes:
                     parent_attrs = parent_product.attribute_value_ids.mapped(
                         'attribute_id')
